@@ -17,8 +17,8 @@ No auth headers are required. The app only sends a standard `Accept: application
 ## 1) Clone & install
 
 ```bash
-git clone https://github.com/<your-user-or-org>/<your-nextjs-repo>.git
-cd <your-nextjs-repo>
+git clone https://github.com/DevAhmedRashad/palm_outsourcing_frontend.git
+cd palm_outsourcing_frontend
 npm install
 ```
 
