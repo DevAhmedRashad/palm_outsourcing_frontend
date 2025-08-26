@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js Tasks Client
 
-## Getting Started
+A minimal **Next.js (App Router)** UI that fetches tasks from the Laravel API and renders a responsive 3‑column grid with colored status chips (Pending, In Progress, Done).
 
-First, run the development server:
+No auth headers are required. The app only sends a standard `Accept: application/json` header.
+
+---
+
+## Requirements
+
+- **Node.js 18+** (Node 20+ recommended)
+- **npm** (bundled with Node)
+- A running Laravel API at something like `http://127.0.0.1:8000` exposing **GET `/api/tasks`**
+
+---
+
+## 1) Clone & install
+
+```bash
+git clone https://github.com/<your-user-or-org>/<your-nextjs-repo>.git
+cd <your-nextjs-repo>
+npm install
+```
+
+---
+
+## 2) Configure environment
+
+Create a **.env.local** file if not already there in the project root and point it to your Laravel API:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000/api
+```
+
+> No tokens or API keys are used. The app fetches with `Accept: application/json` only.
+
+---
+
+## 3) Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- The home page fetches data **on the server** and renders the grid.
+- Because it’s a **server-side fetch**, you won’t see this API call in the browser’s Network tab (this is expected).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 4) Build for production
 
-## Learn More
+```bash
+npm run build
+npm start
+# open http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure (relevant files)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  app/
+    layout.jsx        # App shell (imports globals.css)
+    page.jsx          # Fetches tasks and renders the grid
+    globals.css       # Tailwind entry
+  components/
+    TaskCard.jsx      # Single card UI with colored status chip
+  lib/
+    api.js            # getTasks() — calls Laravel /api/tasks
+```
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API expectation
+
+The client expects **GET** `${NEXT_PUBLIC_API_BASE_URL}/tasks` to return:
+- a resource-wrapped payload `{ "data": [ ... ] }`
+
+`src/lib/api.js` safely unwraps either shape into an array.
+
+Example:
+```json
+[
+  { "id": 1, "title": "Set up project", "description": "Init Laravel repo and configs", "status": "Pending" },
+  { "id": 2, "title": "Design API schema", "description": "Decide fields for Task entity", "status": "In Progress" },
+  { "id": 3, "title": "Implement /tasks", "description": "Return JSON list of tasks", "status": "Done" }
+]
+```
+---
+## Notes
+
+- Status chips:
+  - **Pending** → light gray
+  - **In Progress** → yellow
+  - **Done** → green
+- No authentication or secret headers are used.
+
+---
+
+## Implemented Feature
+
+
+## Version 1.0.0
+
+- List all tasks with its relevent status.
