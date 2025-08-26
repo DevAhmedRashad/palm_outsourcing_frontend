@@ -3,7 +3,6 @@ export async function getTasks() {
   const res = await fetch(`${baseUrl}/tasks`, {
     headers: { 
         Accept: "application/json",
-        "x-api-key": "QWERTYUIOPLKJJHFA12345FGJZB7891231",
      },
     cache: "no-store",
     next: { revalidate: 0 },
